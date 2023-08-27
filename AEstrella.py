@@ -1,6 +1,7 @@
 from pyamaze import maze,agent
 from queue import PriorityQueue
-
+import threading
+import time
 #ToDo
 '''
 * Posicionar meta
@@ -18,9 +19,12 @@ y = 0
 goal_x = 1
 goal_y = 1
 
+fin = False
+movimientos = 0
+
 # Posicion del agente
-agent_x=1
-agent_y=1
+#agent_x
+#agent_y
 
 # Funcion para indicar el tamaño deseado para el algoritmo
 def configurationSize():
@@ -46,16 +50,6 @@ def configurationMeta():
     goal_x= int(input("Valor de llegada en X: "))
     goal_y=int(input("Valor de llegada en Y: "))
     if goal_x>0 and goal_y>0 and goal_x<=x and goal_x<=y and goal_y<=y and goal_y<=x:
-        configurationAgent()
-    else:
-        print("Posicion o tamaño incorrecto")
-#configuracion de la posicion del agente
-def configurationAgent():
-    global agent_x, agent_y
-    print("\n [Defina la posicion del agente ]\n")
-    agent_x= int(input("Valor del agente en X: "))
-    agent_y=int(input("Valor del agente en Y: "))
-    if agent_x>0 and agent_y>0 and agent_x!=goal_x and agent_y!=goal_y and agent_x<=x and agent_x<=y and agent_y<=y and agent_y<=x:
         createMaze()
     else:
         print("Posicion o tamaño incorrecto")
@@ -80,6 +74,14 @@ def calculate_h(c1, c2):
 
 # Comienza el calculo de el algoritmo A*
 def aStar_calculation(maze, start):
+
+    global fin
+
+    exit_event = threading.Event()
+
+    timer_thread = threading.Thread(target=run_timer)
+    timer_thread.start()
+
     g_score={cell:float('inf') for cell in maze.grid}
     g_score[start] = 0
 
@@ -90,7 +92,6 @@ def aStar_calculation(maze, start):
     open.put((calculate_h(start,maze._goal), calculate_h(start,maze._goal), start))
 
     aPath = {}
-
     while not open.empty():
         currentCell = open.get()[2]
         if currentCell == maze._goal:
@@ -121,25 +122,46 @@ def aStar_calculation(maze, start):
     while cell != start:
         forwardPath[aPath[cell]] = cell
         cell = aPath[cell]
+    fin = True
+    exit_event.set()  # Asegura que el cronómetro también se detiene cuando la ventana se cierra
+    timer_thread.join()  # Espera a que el hilo del cronómetro termine
     return forwardPath
+
+def run_timer():
+    start_time = time.time()
+    while not fin:
+        time.sleep(1)
+        current_time = time.time() - start_time
+        print( "Algoritmo A*: "+ str(current_time) + " segundos")
+
+def imprimir_hilo():
+    for i in range(movimientos):
+        print("Duración de recorrido: " + str(i/3.1) + " segundos")
+        time.sleep(0.31)
 
 
 def createMaze():
+    global movimientos
     m = maze(x, y)
 
     # Aqui se definira donde se posicionara la meta
+    print("inicio lab")
     m.CreateMaze(goal_x, goal_y)
+    print("fin lab")
     
     print(m.maze_map)
 
     #Aqui donde se posicionara el n
-    path = aStar_calculation(m, (agent_x, agent_y))
-
+    path = aStar_calculation(m, (2, 2))
+    movimientos = len(path)
     # Se identifica nuevamente donde se posiciona el agente
-    a = agent(m, agent_x, agent_y, footprints=True, filled=True)
+    a = agent(m, 2, 2, footprints=True, filled=True)
     m.tracePath({a:path})
-
+    thread1 = threading.Thread(target=imprimir_hilo)
+    thread1.start()
     m.run()
+    thread1.join()
+
 
 if '__main__' == __name__:
     configurationSize()
