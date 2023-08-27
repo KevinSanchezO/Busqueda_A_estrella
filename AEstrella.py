@@ -33,10 +33,22 @@ def configurationSize():
     if (checkSizes(val_x, val_y)):
         x = int(val_x)
         y = int(val_y)
-        createMaze()
+        #createMaze()
+        configurationMeta()
     else:
         print("\nTamaños no validos")
         configurationSize()
+
+#configuracion de la posiscion de la meta
+def configurationMeta():
+    global goal_x, goal_y
+    print("\n [Defina la posicion de llegada ]\n")
+    goal_x= int(input("Valor de llegada en X: "))
+    goal_y=int(input("Valor de llegada en Y: "))
+    if goal_x>0 and goal_y>0 and goal_x<=x and goal_x<=y and goal_y<=y and goal_y<=x:
+        createMaze()
+    else:
+        print("Posicion o tamaño incorrecto")
 
 # Verifica que los tamaños sean positvos y que se ingresaron enteros
 def checkSizes(val_x, val_y):
@@ -114,7 +126,7 @@ def createMaze():
     path = aStar_calculation(m, (m.rows, m.cols))
 
     # Se identifica nuevamente donde se posiciona el agente
-    a = agent(m, m.rows, m.cols, footprints=True, filled=True)
+    a = agent(m, 2, 2, footprints=True, filled=True)
     m.tracePath({a:path})
 
     m.run()
