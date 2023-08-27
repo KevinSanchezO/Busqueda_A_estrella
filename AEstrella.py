@@ -19,8 +19,8 @@ goal_x = 1
 goal_y = 1
 
 # Posicion del agente
-#agent_x
-#agent_y
+agent_x=1
+agent_y=1
 
 # Funcion para indicar el tamaño deseado para el algoritmo
 def configurationSize():
@@ -46,6 +46,16 @@ def configurationMeta():
     goal_x= int(input("Valor de llegada en X: "))
     goal_y=int(input("Valor de llegada en Y: "))
     if goal_x>0 and goal_y>0 and goal_x<=x and goal_x<=y and goal_y<=y and goal_y<=x:
+        configurationAgent()
+    else:
+        print("Posicion o tamaño incorrecto")
+#configuracion de la posicion del agente
+def configurationAgent():
+    global agent_x, agent_y
+    print("\n [Defina la posicion del agente ]\n")
+    agent_x= int(input("Valor del agente en X: "))
+    agent_y=int(input("Valor del agente en Y: "))
+    if agent_x>0 and agent_y>0 and agent_x!=goal_x and agent_y!=goal_y and agent_x<=x and agent_x<=y and agent_y<=y and agent_y<=x:
         createMaze()
     else:
         print("Posicion o tamaño incorrecto")
@@ -123,10 +133,10 @@ def createMaze():
     print(m.maze_map)
 
     #Aqui donde se posicionara el n
-    path = aStar_calculation(m, (m.rows, m.cols))
+    path = aStar_calculation(m, (agent_x, agent_y))
 
     # Se identifica nuevamente donde se posiciona el agente
-    a = agent(m, 2, 2, footprints=True, filled=True)
+    a = agent(m, agent_x, agent_y, footprints=True, filled=True)
     m.tracePath({a:path})
 
     m.run()
