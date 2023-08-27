@@ -2,14 +2,6 @@ from pyamaze import maze,agent
 from queue import PriorityQueue
 import threading
 import time
-#ToDo
-'''
-* Posicionar meta
-* Posicionar agente
-* Cronometro
-* Obstaculos
-* Pruebas
-'''
 
 # Dimensiones para el laberinto
 x = 0
@@ -23,8 +15,8 @@ fin = False
 movimientos = 0
 
 # Posicion del agente
-#agent_x
-#agent_y
+agent_x = 0
+agent_y = 0
 
 # Funcion para indicar el tamaño deseado para el algoritmo
 def configurationSize():
@@ -74,7 +66,6 @@ def checkGoal(val_goal_x, val_goal_y):
         
 #configuracion de la posicion del agente
 def configurationAgent():
-    
     print("\n [Defina la posicion del agente ]\n")
     val_agent_x = input("Valor del agente en X: ")
     val_agent_y = input("Valor del agente en Y: ")
@@ -169,32 +160,20 @@ def imprimir_hilo():
         print("Duración de recorrido: " + str(i/3.1) + " segundos")
         time.sleep(0.31)
 
-
-
-
-
-
-
-
-
-
-
 def createMaze():
     global movimientos
     m = maze(x, y)
 
     # Aqui se definira donde se posicionara la meta
-   
-   
     m.CreateMaze(goal_x, goal_y)
     
     print(m.maze_map)
 
     #Aqui donde se posicionara el n
-    path = aStar_calculation(m, (2, 2))
+    path = aStar_calculation(m, (agent_x, agent_y))
     movimientos = len(path)
     # Se identifica nuevamente donde se posiciona el agente
-    a = agent(m, 2, 2, footprints=True, filled=True)
+    a = agent(m, agent_x, agent_y, footprints=True, filled=True)
     m.tracePath({a:path})
     thread1 = threading.Thread(target=imprimir_hilo)
     thread1.start()
