@@ -1,6 +1,15 @@
 from pyamaze import maze,agent
 from queue import PriorityQueue
 
+#ToDo
+'''
+* Posicionar meta
+* Posicionar agente
+* Cronometro
+* Obstaculos
+* Pruebas
+'''
+
 # Dimensiones para el laberinto
 x = 0
 y = 0
@@ -99,6 +108,8 @@ def createMaze():
     # Aqui se definira donde se posicionara la meta
     m.CreateMaze(goal_x, goal_y)
     
+    print(m.maze_map)
+
     #Aqui donde se posicionara el n
     path = aStar_calculation(m, (m.rows, m.cols))
 
