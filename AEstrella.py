@@ -37,22 +37,11 @@ def configurationSize():
     if (checkSizes(val_x, val_y)):
         x = int(val_x)
         y = int(val_y)
-        #createMaze()
         configurationMeta()
     else:
         print("\nTamaños no validos")
         configurationSize()
 
-#configuracion de la posiscion de la meta
-def configurationMeta():
-    global goal_x, goal_y
-    print("\n [Defina la posicion de llegada ]\n")
-    goal_x= int(input("Valor de llegada en X: "))
-    goal_y=int(input("Valor de llegada en Y: "))
-    if goal_x>0 and goal_y>0 and goal_x<=x and goal_x<=y and goal_y<=y and goal_y<=x:
-        createMaze()
-    else:
-        print("Posicion o tamaño incorrecto")
 
 # Verifica que los tamaños sean positvos y que se ingresaron enteros
 def checkSizes(val_x, val_y):
@@ -60,6 +49,47 @@ def checkSizes(val_x, val_y):
         val_x = int(val_x)
         val_y = int(val_y)
         return val_x > 0 and val_y > 0
+    else:
+        return False
+
+#configuracion de la posiscion de la meta
+def configurationMeta():
+    print("\n [Defina la posicion de llegada ]\n")
+    val_goal_x = input("Valor de llegada en X: ")
+    val_goal_y = input("Valor de llegada en Y: ")
+    if checkGoal(val_goal_x, val_goal_y):
+        configurationAgent()
+    else:
+        print("\nPosicion no valida\n")
+        configurationMeta()
+    
+def checkGoal(val_goal_x, val_goal_y):
+    global goal_x, goal_y
+    if val_goal_x.isdigit() and val_goal_y.isdigit():
+        goal_x = int(val_goal_x)
+        goal_y = int(val_goal_y)
+        return ((goal_x > 0 and goal_y > 0) and (goal_x <= x and goal_y <= y))
+    else:
+        return False
+        
+#configuracion de la posicion del agente
+def configurationAgent():
+    
+    print("\n [Defina la posicion del agente ]\n")
+    val_agent_x = input("Valor del agente en X: ")
+    val_agent_y = input("Valor del agente en Y: ")
+    if checkPosAgent(val_agent_x, val_agent_y):
+        createMaze()
+    else:
+        print("\nPosicion no valida\n")
+        configurationAgent()
+
+def checkPosAgent(val_agent_x, val_agent_y):
+    global agent_x, agent_y
+    if val_agent_x.isdigit() and val_agent_y.isdigit():
+        agent_x = int(val_agent_x)
+        agent_y = int(val_agent_y)
+        return ((agent_x != goal_x or agent_y != goal_y) and (agent_x>0 and agent_y>0) and (agent_x <= x and agent_y <= y))
     else:
         return False
 
@@ -140,14 +170,23 @@ def imprimir_hilo():
         time.sleep(0.31)
 
 
+
+
+
+
+
+
+
+
+
 def createMaze():
     global movimientos
     m = maze(x, y)
 
     # Aqui se definira donde se posicionara la meta
-    print("inicio lab")
+   
+   
     m.CreateMaze(goal_x, goal_y)
-    print("fin lab")
     
     print(m.maze_map)
 
