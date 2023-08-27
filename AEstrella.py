@@ -165,7 +165,8 @@ def createMaze():
     m = maze(x, y)
 
     # Aqui se definira donde se posicionara la meta
-    m.CreateMaze(goal_x, goal_y)
+    # Se puede modificar el loopPercent para variar la generacion de laberintos
+    m.CreateMaze(goal_x, goal_y,loopPercent=0)
     
     #print(m.maze_map)
 
